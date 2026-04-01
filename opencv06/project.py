@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+import random
 
 #그림을 그릴 판
 canvas = None
@@ -38,10 +39,6 @@ while True:
     mask = cv2.inRange(hsv, lower_red, upper_red)
     res = cv2.bitwise_and(frame, frame, mask=mask)
 
-    #노이즈 제거(모폴로지 연산)
-    #mask = cv2.erode(mask, None, iterations=2)
-    #mask = cv2.dilate(mask, None, iterations=2)
-
     #물체의 윤곽선 찾기
     cnts, _ = cv2.findContours(mask.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
@@ -76,9 +73,9 @@ while True:
     elif draw_color == (0, 255, 0):
         color_text ="GREEN"
     else:
-        color_text = "CUSTOM"
+        color_text = f"RGB{draw_color}" # 현재 적용된 BGR 값 표시
 
-    # 2. 화면에 텍스트 쓰기 
+    #화면에 텍스트 쓰기 
     cv2.putText(result, f"Current Color: {color_text}", (30, 50), 
                 cv2.FONT_HERSHEY_SIMPLEX, 1, draw_color, 2, cv2.LINE_AA)
 
@@ -92,8 +89,11 @@ while True:
     elif key == ord('c'):
         canvas = np.zeros_like(frame)
     elif key == ord('p'):
-        draw_color = (0, 255, 0)
-    elif key == ord('r'):
-        draw_color = (0, 0, 255)
+        b =random.randint(0, 255)
+        r =random.randint(0, 255)
+        g =random.randint(0, 255)
+        draw_color = (b, g, r)
+    
 
+    
 cv2.destroyAllWindows()
